@@ -4,6 +4,6 @@ const router = express.Router();
 
 const pkmnTypeController = require('../controllers/PkmnType.controller');
 
-router.get('/', pkmnTypeController.getAllTypes);
+router.get('/types', pkmnTypeController.getAllTypes);
 
 module.exports = router;

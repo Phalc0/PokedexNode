@@ -9,6 +9,6 @@ const pkmnTypeRoutes = require('./routes/PkmnType.routes');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/api/pkmn/types', pkmnTypeRoutes);
+app.use('/pkmn', pkmnTypeRoutes);
 
 module.exports = app;

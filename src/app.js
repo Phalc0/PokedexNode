@@ -1,3 +1,14 @@
 const express = require('express')
-const path = require('path');
 const app = express()
+
+const path = require('path');
+
+const pkmnTypeRoutes = require('./routes/PkmnType.routes');
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use('/api/pkmn/types', pkmnTypeRoutes);
+
+module.exports = app;

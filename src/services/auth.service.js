@@ -1,32 +1,78 @@
-const User = require('../models/User.model');
-const jwt = require('jsonwebtoken');
-const SECRET = process.env.JWT_SECRET || 'monsecret123';
+const userModel = require('../models/User.model');
+const bcrypt = require('bcrypt');
 
-exports.registerUser = async ({ username, email, password, role }) => {
-  const existingUser = await User.findOne({ username });
-  if (existingUser) throw new Error('Username déjà utilisé');
+class UserService {
 
-  const user = new User({ username, email, password, role });
-  await user.save();
-  return user;
-};
+    async createUser(userData) {
+        let user;
+        // Clone the incoming userData to avoid mutating the original object
+        const clonedData = structuredClone(userData);
+        try {
+            // Lock admin creation via register
+            clonedData.role = "user";
+            
+            // Hash the password
+            const hash = await bcrypt.hash(clonedData.password, 10);
+            clonedData.password = hash;
 
-exports.loginUser = async ({ username, password }) => {
-  const user = await User.findOne({ username });
-  if (!user) throw new Error('Utilisateur non trouvé');
+            // Create the user in the database
+            user = await userModel.create(clonedData);
+        } catch (err) {
+            throw err;
+        }
 
-  const valid = await user.comparePassword(password);
-  if (!valid) throw new Error('Mot de passe incorrect');
+        return user;
+    }
 
-  const token = jwt.sign(
-    { userId: user._id, role: user.role },
-    SECRET,
-    { expiresIn: '24h' }
-  );
+    async updateUser(userId, updateData) {
+        try {
+            const user = await userModel.findByIdAndUpdate(userId, updateData, { new: true });
+            return user;
+        } catch (err) {
+            throw err;
+        }
+    }
 
-  return { token, userId: user._id, role: user.role };
-};
+    async deleteUser(userId) {
+        try {
+            await userModel.findByIdAndDelete(userId);
+            return { message: 'User deleted successfully' };
+        } catch (err) {
+            throw err;
+        }
+    }
 
-exports.getUserById = async (id) => {
-  return User.findById(id).select('-password');
-};
+
+    async getUserById(userId) {
+        try {
+            const user = await userModel.findById(userId);
+            return user;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    async getUserByEmail(email) {
+
+        try {
+            const user = await userModel.findOne({ email: email });
+            return user;
+        } catch (err) {
+            throw err;
+        }
+
+    }
+
+    async verifyPassword(password, hash) {
+        try {
+            const match = await bcrypt.compare(password, hash);
+            return match;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+}
+
+module.exports = UserService;

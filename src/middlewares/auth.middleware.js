@@ -1,20 +1,15 @@
-const jwt = require('jsonwebtoken');
-const SECRET = process.env.JWT_SECRET || 'monsecret123';
-
+const jwt = require("jsonwebtoken");
 module.exports = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) throw 'Token manquant';
-
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, SECRET);
-
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+    const userId = decodedToken.userId;
     req.auth = {
-      userId: decoded.userId,
-      role: decoded.role
+      userId: userId,
+      role: decodedToken.role
     };
     next();
-  } catch(err) {
-    res.status(401).json({ message: 'Authentification échouée', error: err });
+  } catch (error) {
+    res.status(401).json({ error });
   }
 };

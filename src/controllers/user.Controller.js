@@ -1,28 +1,39 @@
-const userService = require('../services/auth.service');
+const UserService = require('../services/user.service');
+const userService = new UserService();
+const jwt = require('jsonwebtoken');
 
+
+// Register a new user
 exports.register = async (req, res) => {
-  try {
-    const user = await userService.registerUser(req.body);
-    res.status(201).json({ message: 'Utilisateur créé', userId: user._id });
-  } catch(err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+    try {
+        let user = await userService.createUser(req.body);
+        res.status(201).json({ message: "User created successfully", userId: user._id });
+    } catch (err) {
+        res.status(400).json({ message: "Error creating user", error: err });
+    }
+}
 
+// Login a user
 exports.login = async (req, res) => {
-  try {
-    const data = await userService.loginUser(req.body);
-    res.status(200).json(data);
-  } catch(err) {
-    res.status(401).json({ message: err.message });
-  }
-};
+    try {
+        // 1 - Get user by email
+        let user = await userService.getUserByEmail(req.body.email)
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-exports.checkUser = async (req, res) => {
-  try {
-    const user = await userService.getUserById(req.auth.userId);
-    res.status(200).json({ user });
-  } catch(err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+        // 2 - Validate the password
+        const isValid = await userService.verifyPassword(req.body.password, user.password);
+        if (!isValid) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        // 3 - Generate JWT token (payload: userId, private key: TOKEN_SECRET, option)
+        const token = jwt.sign({userId: user._id, role: user.role}, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+
+        res.status(200).json({ message: token });
+    }
+    catch (err) {
+        res.status(400).json({ message: "Error logging in", error: err });
+    }
+}

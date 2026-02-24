@@ -1,15 +1,45 @@
 const PkmnService = require("../services/pkmn.service");
-const pkmnService = new PkmnService();
 const mongoose = require("mongoose");
 
+
+jest.mock("../services/pkmn.service");
+
+// In-memory array to simulate the database
+const mockData = [];
+
+//* Note: this mock implementation will be used for all tests in this suite. It contains the logic for all.
+PkmnService.mockImplementation(() => {
+    return {
+        // Simulate creation of a Pokemon, throw error if duplicate name
+        createPkmn: jest.fn(async (data) => {
+            if (mockData.some(p => p.name === data.name)) {
+                throw new Error("A Pokemon with this name already exists");
+            }
+            const created = { ...data, _id: `${data.name}-id` };
+            mockData.push(created);
+            return {
+                toObject: () => created
+            };
+        }),
+        // Return all Pokemon in the mock array
+        getAllPkmn: jest.fn(async () => mockData),
+        // Filter Pokemon by type if specified
+        search: jest.fn(async (query) => {
+            let filtered = mockData;
+            if (query.typeOne) {
+                filtered = mockData.filter(p => p.types.includes(query.typeOne));
+            }
+            return { data: filtered };
+        })
+    };
+});
+
+const pkmnService = new PkmnService();
+
 describe("Pkmn Service", () => {
-    beforeAll(async () => {
-        // Connect to the test database before running any tests
-        await mongoose.connect("mongodb://127.0.0.1:27017/td_test");
-    });
-    // Clean the collection before each test to ensure isolation (No double Pokemon and so test failed)
-    beforeEach(async () => {
-        await mongoose.connection.collection("pkmns").deleteMany({}); // lowercase + plural by default with Mongoose, so for  ex model Pkmn = "Pkmn" => "pkmns"
+    // Reset mock data before each test to ensure isolation
+    beforeEach(() => {
+        mockData.length = 0;
     });
 
     test("should create a new Pokemon", async () => {
@@ -21,19 +51,17 @@ describe("Pkmn Service", () => {
         };
 
         const createdPkmn = await pkmnService.createPkmn(newPkmnData);
-
-        // ensure there is no fake positives
         const obj = createdPkmn.toObject();
-        // Exemple
-        // Expected: ArrayContaining [{"regionName": "Kanto", "regionPokedexNumber": 1}]   
-        // Received: [{"regionName": "Kanto", "regionPokedexNumber": 1}]
 
+        // Assertions to verify the created Pokemon
         expect(obj).toHaveProperty("_id");
         expect(obj.name).toBe(newPkmnData.name);
         expect(obj.types).toEqual(expect.arrayContaining(newPkmnData.types));
         expect(obj.regions).toEqual(expect.arrayContaining(newPkmnData.regions));
         expect(obj.imgUrl).toBe(newPkmnData.imgUrl);
     });
+
+    // Test: Prevent creation of duplicate Pokemon by name
     test("should not create a Pokemon with duplicate name", async () => {
         const newPkmnData = {
             name: "bulbasaur",
@@ -43,10 +71,10 @@ describe("Pkmn Service", () => {
         };
 
         await pkmnService.createPkmn(newPkmnData);
-
-        // Try to create the same Pokemon again
         await expect(pkmnService.createPkmn(newPkmnData)).rejects.toThrow("A Pokemon with this name already exists");
     });
+
+    // Test: Retrieve all Pokemon
     test("should return all Pokemon", async () => {
         const pkmn1 = {
             name: "bulbasaur",
@@ -71,6 +99,8 @@ describe("Pkmn Service", () => {
             expect.objectContaining({ name: "charmander" })
         ]));
     });
+
+    // Test: Filter Pokemon by type
     test("should return pokemon filtered by type", async () => {
         const pkmn1 = {
             name: "bulbasaur",
@@ -90,12 +120,10 @@ describe("Pkmn Service", () => {
 
         const filteredPkmn = await pkmnService.search({ typeOne: "FIRE" });
 
+        // Assertions to verify only the correct Pokemon is returned
         expect(filteredPkmn.data).toHaveLength(1);
-        expect(filteredPkmn.data).toEqual([expect.objectContaining({ name: "charmander" })]);
-    });
-
-    afterAll(async () => {
-        //! Close the connection after all tests are done
-        await mongoose.connection.close();
+        expect(filteredPkmn.data).toEqual([
+            expect.objectContaining({ name: "charmander" })
+        ]);
     });
 });

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const authController = require('../controllers/auth.controller');
+const authController = require('../controllers/user.Controller');
 const authMiddleware = require('../middlewares/auth.middleware');
-const permissions = require('../middlewares/permissions.middleware');
+const { checkRole } = require('../middlewares/permissions.middleware');
 
 // Inscription
 router.post('/register', authController.register);
@@ -20,10 +20,10 @@ router.get('/checkUser', authMiddleware, authController.checkToken);
 router.post(
   '/pokemon',
   authMiddleware,
-  permissions(['ADMIN']),
+  checkRole(['admin']),
   (req, res) => {
     res.status(200).json({
-      message: 'Création Pokémon autorisée (ADMIN)'
+      message: 'Création Pokémon autorisée (admin)'
     });
   }
 );
@@ -32,7 +32,7 @@ router.post(
 router.get(
   '/myProfile',
   authMiddleware,
-  permissions(['USER', 'ADMIN']),
+  checkRole(['user', 'admin']),
   (req, res) => {
     res.status(200).json({
       message: 'Accès autorisé'

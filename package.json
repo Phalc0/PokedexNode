@@ -5,9 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "test": "jest",
-    "start": "npx nodemon src/server.js",
-    "prod": "node src/server.js",
-    "dev": "npx nodemon src/server.js"
+    "start": "npx nodemon --env-file=props.env src/server.js",
+    "prod": "node --env-file=props.env src/server.js",
+    "dev": "npx nodemon --env-file=props.env src/server.js"
   },
   "repository": {
     "type": "git",

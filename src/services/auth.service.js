@@ -6,6 +6,7 @@ class UserService {
     async createUser(userData) {
         let user;
         // Clone the incoming userData to avoid mutating the original object
+        // mostly to ensure we don't accidentally modify the input data when hashing the password
         const clonedData = structuredClone(userData);
         try {
             // Lock admin creation via register

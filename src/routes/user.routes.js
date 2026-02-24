@@ -16,7 +16,7 @@ router.post('/login', authController.login);
 router.get('/checkUser', authMiddleware, authController.checkToken);
 
 
-// Exemple : création Pokémon → ADMIN uniquement
+// Route Test : création Pokémon → ADMIN uniquement
 router.post(
   '/pokemon',
   authMiddleware,
@@ -28,7 +28,7 @@ router.post(
   }
 );
 
-// Exemple : route accessible USER et ADMIN
+// Route Test : route accessible USER et ADMIN
 router.get(
   '/myProfile',
   authMiddleware,

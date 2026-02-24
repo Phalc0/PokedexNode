@@ -5,7 +5,7 @@ class PkmnService {
     async createPkmn(pkmnData) {
         let existingPkmn = await Pkmn.findOne({ name: pkmnData.name });
         if (existingPkmn) {
-            throw new Error('A Pokémon with this name already exists');
+            throw new Error('A Pokemon with this name already exists');
         }
         let pkmn = new Pkmn(pkmnData);
         return pkmn.save();

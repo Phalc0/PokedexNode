@@ -10,6 +10,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/td')
 const pkmnTypeRoutes = require('./routes/PkmnType.routes'); // /pkmn/types
 const userRoutes = require('./routes/user.routes');         // /users
 const pkmnRoutes = require('./routes/pkmn.routes');   // /pkmn CRUD Pokemons
+const trainerRoutes = require('./routes/trainer.routes');   // /trainers CRUD Trainers
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -18,5 +19,6 @@ app.use(express.json());
 app.use('/pkmn/types', pkmnTypeRoutes);
 app.use('/users', userRoutes);
 app.use('/pkmn', pkmnRoutes);
+app.use('/trainers', trainerRoutes);
 
 module.exports = app;

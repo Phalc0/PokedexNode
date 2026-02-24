@@ -7,7 +7,7 @@ exports.createPkmn = async (req, res) => {
         res.status(201).json(newPkmn);
     }
     catch (err) {
-        console.error('Error creating Pokemon:', err); // log pour debug
+        console.error('Error creating Pokemon:', err);
         res.status(400).json({ message: err.message }); 
     }
 }

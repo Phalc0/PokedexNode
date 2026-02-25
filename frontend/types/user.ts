@@ -1,5 +1,6 @@
 export interface User {
   _id: string;
   username: string;
-  token?: string;
+  email: string;
+  role: "user" | "admin";
 }

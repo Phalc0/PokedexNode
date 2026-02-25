@@ -51,8 +51,8 @@ exports.getTrainerById = async (req, res) => {
 
 exports.markPkmn = async (req, res) => {
     try {
-        const { pkmnId, isCatched } = req.body;
-        const trainer = await trainerService.markPkmn(req.auth.userId, pkmnId, isCatched);
+        const { pkmnId, isCaught } = req.body;
+        const trainer = await trainerService.markPkmn(req.auth.userId, pkmnId, isCaught);
         res.status(200).json(trainer);
     }
     catch (err) {

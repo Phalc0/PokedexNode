@@ -23,7 +23,7 @@ const trainerSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId, // Type ObjectId to reference the Pkmn model
         ref: 'Pkmn'
     }],
-    pkmnCatched:[{
+    pkmnCaught:[{
         type: Schema.Types.ObjectId, // Type ObjectId to reference the Pkmn model
         ref: 'Pkmn'
     }]

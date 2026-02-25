@@ -23,7 +23,7 @@ class TrainerService {
             trainerName: data.trainerName,
             imgUrl: data.imgUrl,
             pkmnSeen: [],
-            pkmnCatched: []
+            pkmnCaught: []
         });
 
         return trainer;
@@ -67,7 +67,7 @@ class TrainerService {
     }
 
 
-    async markPkmn(userId, pkmnId, isCatched) {
+    async markPkmn(userId, pkmnId, isCaught) {
         // Validate pkmnId is a valid ObjectId
         if (!mongoose.Types.ObjectId.isValid(pkmnId)) {
             throw new Error('Invalid Pokemon ID');
@@ -95,10 +95,10 @@ class TrainerService {
             trainer.pkmnSeen.push(pkmnId);
         }
 
-        // add to catched 
-        if (isCatched) {
-            if (!trainer.pkmnCatched.includes(pkmnId)) {
-                trainer.pkmnCatched.push(pkmnId);
+        // add to caught
+        if (isCaught) {
+            if (!trainer.pkmnCaught.includes(pkmnId)) {
+                trainer.pkmnCaught.push(pkmnId);
             }
         }
         

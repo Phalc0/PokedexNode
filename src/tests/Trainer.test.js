@@ -64,7 +64,7 @@ describe("Trainer Service", () => {
         expect(trainer.trainerName).toBe(data.trainerName);
         expect(trainer.imgUrl).toBe(data.imgUrl);
         expect(trainer.pkmnSeen).toEqual([]);
-        expect(trainer.pkmnCatched).toEqual([]);
+        expect(trainer.pkmnCaught).toEqual([]);
     });
 
     test("should not create a trainer if trainer already exists", async () => {
@@ -83,25 +83,25 @@ describe("Trainer Service", () => {
     });
 
 
-    test("should mark a pokemon as seen and catched", async () => {
+    test("should mark a pokemon as seen and caught", async () => {
         mockUsers.push({ _id: "user1", username: "ash" });
-        mockTrainers.push({ username: "ash", pkmnSeen: [], pkmnCatched: [], save: async function() { return this; } });
+        mockTrainers.push({ username: "ash", pkmnSeen: [], pkmnCaught: [], save: async function() { return this; } });
         // Use a valid MongoDB ObjectId string
         const validPkmnId = "507f1f77bcf86cd799439011";
         mockPkmns.push({ _id: validPkmnId });
         const trainer = await trainerService.markPkmn("user1", validPkmnId, true);
         expect(trainer.pkmnSeen).toContain(validPkmnId);
-        expect(trainer.pkmnCatched).toContain(validPkmnId);
+        expect(trainer.pkmnCaught).toContain(validPkmnId);
     });
 
-    test("should mark a pokemon as seen only (not catched)", async () => {
+    test("should mark a pokemon as seen only (not caught)", async () => {
         mockUsers.push({ _id: "user1", username: "ash" });
-        mockTrainers.push({ username: "ash", pkmnSeen: [], pkmnCatched: [], save: async function() { return this; } });
+        mockTrainers.push({ username: "ash", pkmnSeen: [], pkmnCaught: [], save: async function() { return this; } });
         // Use a valid MongoDB ObjectId string
         const validPkmnId = "507f1f77bcf86cd799439011";
         mockPkmns.push({ _id: validPkmnId });
         const trainer = await trainerService.markPkmn("user1", validPkmnId, false);
         expect(trainer.pkmnSeen).toContain(validPkmnId);
-        expect(trainer.pkmnCatched).not.toContain(validPkmnId);
+        expect(trainer.pkmnCaught).not.toContain(validPkmnId);
     });
 });

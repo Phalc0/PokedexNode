@@ -3,10 +3,11 @@
 3 - hooks to managa data 
 4 - Auth ( 1- form + hook useAuth to managa token,login and logout)
 5 - Pages :
-    - / = pokedex
-    - /pokemon/[id] : detail page of a pokemon
-    - /login
-    - /register
+    vu qu'il faut etre user :
+    1 - register et login
+    2 - pokedex
+    3 - pokemon/id
+    4 - components
 
 les hooks/ 
 permettent de centraliser tout les endroit ou je fais useState, useEffect ...

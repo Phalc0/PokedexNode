@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 
@@ -12,8 +13,16 @@ const userRoutes = require('./routes/user.routes');         // /users
 const pkmnRoutes = require('./routes/pkmn.routes');   // /pkmn CRUD Pokemons
 const trainerRoutes = require('./routes/trainer.routes');   // /trainers CRUD Trainers
 
+// for front end
+app.use(cors({
+    origin: 'http://localhost:3001', // URL frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+
 
 // Routes
 app.use('/pkmn/types', pkmnTypeRoutes);

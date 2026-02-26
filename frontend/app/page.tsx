@@ -1,17 +1,226 @@
 'use client';
-
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
+import { useState } from 'react';
 
 export default function HomePage() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+  const [phase, setPhase] = useState<'idle' | 'opening' | 'zooming'>('idle');
+
+  const handleEnter = () => {
+    if (phase !== 'idle') return;
+    setPhase('opening');
+    setTimeout(() => setPhase('zooming'), 800);
+    setTimeout(() => {
+      router.push(isAuthenticated ? '/pokedex' : '/login');
+    }, 1600);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-center">
-      <h1 className="text-4xl font-bold mb-4">Bienvenue dans ton Pokédex !</h1>
-      <p className="mb-6">Explore et capture tous les Pokémon.</p>
-      <Link href="/pokedex">
-        <button className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Accéder au Pokédex
-        </button>
-      </Link>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'radial-gradient(ellipse at center, #3a3636 0%, #1a1010 100%)' }}>
+      <style>{`
+        .dex-wrap {
+          transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+        .dex-wrap.zooming {
+          transform: scale(8);
+          opacity: 0;
+        }
+
+        .dex-body {
+          width: 240px;
+          position: relative;
+        }
+
+        .panel-red {
+          background: linear-gradient(145deg, #d03e4f 0%, #c30d23 60%, #a00a1e 100%);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .panel-top {
+          border-radius: 26px 26px 0 0;
+          height: 145px;
+          transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-origin: bottom center;
+          position: relative;
+          z-index: 2;
+          box-shadow: inset 0 2px 4px rgba(255,160,160,0.12);
+        }
+        .panel-top.open { transform: translateY(-102%); }
+
+        .panel-bottom {
+          border-radius: 0 0 26px 26px;
+          height: 145px;
+          transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-origin: top center;
+          position: relative;
+          z-index: 2;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+        .panel-bottom.open { transform: translateY(102%); }
+
+        .panel-red::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            /* coin haut gauche - grand anneau */
+            radial-gradient(circle 72px at -10px -10px, transparent 50%, rgba(0,0,0,0.38) 51%, rgba(0,0,0,0.38) 65%, transparent 66%),
+            /* coin haut gauche - petit anneau intérieur */
+            radial-gradient(circle 46px at -10px -10px, transparent 50%, rgba(0,0,0,0.28) 51%, rgba(0,0,0,0.28) 64%, transparent 65%),
+
+            /* coin haut droit - grand anneau */
+            radial-gradient(circle 72px at calc(100% + 10px) -10px, transparent 50%, rgba(0,0,0,0.38) 51%, rgba(0,0,0,0.38) 65%, transparent 66%),
+            /* coin haut droit - petit anneau */
+            radial-gradient(circle 46px at calc(100% + 10px) -10px, transparent 50%, rgba(0,0,0,0.28) 51%, rgba(0,0,0,0.28) 64%, transparent 65%),
+
+            /* coin bas gauche - grand anneau */
+            radial-gradient(circle 72px at -10px calc(100% + 10px), transparent 50%, rgba(0,0,0,0.38) 51%, rgba(0,0,0,0.38) 65%, transparent 66%),
+            /* coin bas gauche - petit anneau */
+            radial-gradient(circle 46px at -10px calc(100% + 10px), transparent 50%, rgba(0,0,0,0.28) 51%, rgba(0,0,0,0.28) 64%, transparent 65%),
+
+            /* coin bas droit - grand anneau */
+            radial-gradient(circle 72px at calc(100% + 10px) calc(100% + 10px), transparent 50%, rgba(0,0,0,0.38) 51%, rgba(0,0,0,0.38) 65%, transparent 66%),
+            /* coin bas droit - petit anneau */
+            radial-gradient(circle 46px at calc(100% + 10px) calc(100% + 10px), transparent 50%, rgba(0,0,0,0.28) 51%, rgba(0,0,0,0.28) 64%, transparent 65%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .panel-red::after {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 45%;
+          background: linear-gradient(180deg, rgba(255,255,255,0.09) 0%, transparent 100%);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+                .center-band {
+          height: 88px;
+          position: relative;
+          z-index: 3;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(
+            180deg,
+            rgba(157,228,244,0.25) 0%,
+            rgba(157,228,244,0.78) 25%,
+            rgba(156,233,246,0.92) 50%,
+            rgba(157,228,244,0.78) 75%,
+            rgba(157,228,244,0.25) 100%
+          );
+          border-top: 1.5px solid rgba(200,245,255,0.55);
+          border-bottom: 1.5px solid rgba(200,245,255,0.55);
+          box-shadow:
+            0 0 24px rgba(157,228,244,0.2) inset,
+            0 3px 10px rgba(0,0,0,0.3),
+            0 -3px 10px rgba(0,0,0,0.3);
+        }
+
+        .center-band::before, .center-band::after {
+          content: '';
+          position: absolute;
+          top: 0; bottom: 0; width: 50px;
+          pointer-events: none;
+        }
+        .center-band::before { left:0;  background: linear-gradient(90deg,  rgba(255,255,255,0.2), transparent); }
+        .center-band::after  { right:0; background: linear-gradient(270deg, rgba(255,255,255,0.2), transparent); }
+
+        .pokeball-btn {
+          width: 68px; height: 68px;
+          border-radius: 50%;
+          border: none; padding: 0;
+          cursor: pointer; outline: none;
+          position: relative;
+          background: radial-gradient(circle at 32% 28%, #e8faff, #9de4f4 45%, #5cc8e0);
+          border: 4px solid rgba(255,255,255,0.4);
+          box-shadow:
+            0 0 0 3px rgba(157,228,244,0.3),
+            0 0 22px rgba(157,228,244,1),
+            0 0 50px rgba(157,228,244,0.5),
+            inset 0 2px 4px rgba(255,255,255,0.6);
+          transition: transform 0.15s, box-shadow 0.15s;
+          z-index: 4;
+        }
+        .pokeball-btn:hover {
+          transform: scale(1.08);
+          box-shadow:
+            0 0 0 3px rgba(157,228,244,0.4),
+            0 0 35px rgba(157,228,244,1),
+            0 0 70px rgba(157,228,244,0.6),
+            inset 0 2px 4px rgba(255,255,255,0.6);
+        }
+        .pokeball-btn:active { transform: scale(0.95); }
+
+        .pb-shine {
+          position:absolute; top:10px; left:12px;
+          width:14px; height:9px;
+          border-radius:50%;
+          background:rgba(255,255,255,0.7);
+          filter:blur(2px);
+          pointer-events: none;
+        }
+
+        .screen-behind {
+          position:absolute; top:0; left:0; right:0; bottom:0;
+          border-radius: 26px;
+          background: linear-gradient(160deg, #0d2028, #091520);
+          z-index: 1;
+          display:flex; align-items:center; justify-content:center;
+          opacity:0;
+          transition: opacity 0.3s ease 0.5s;
+        }
+        .screen-behind.visible { opacity:1; }
+
+        .screen-lines { display:flex; flex-direction:column; gap:6px; width:65%; }
+        .screen-line  { height:3px; background:rgba(157,228,244,0.2); border-radius:2px; }
+        .screen-line:nth-child(2) { width:80%; opacity:.7; }
+        .screen-line:nth-child(3) { width:60%; opacity:.5; }
+        .screen-line:nth-child(4) { width:75%; opacity:.6; }
+
+        .tap-label {
+          font-family: 'Courier New', monospace;
+          font-size: 9px;
+          letter-spacing: 0.3em;
+          color: rgba(157,228,244,0.45);
+          text-transform: uppercase;
+          animation: pulse 2s ease-in-out infinite;
+          text-align:center;
+          margin-top: 14px;
+        }
+        @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
+
+        .dex-shadow {
+          filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7)) drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+      `}</style>
+
+      <div className={`dex-wrap ${phase === 'zooming' ? 'zooming' : ''}`}>
+        <div className="dex-shadow dex-body">
+          <div className={`screen-behind ${phase !== 'idle' ? 'visible' : ''}`}>
+            <div className="screen-lines">
+              <div className="screen-line" /><div className="screen-line" />
+              <div className="screen-line" /><div className="screen-line" />
+            </div>
+          </div>
+
+          <div className={`panel-red panel-top ${phase !== 'idle' ? 'open' : ''}`} />
+
+          <div className="center-band">
+            <button className="pokeball-btn" onClick={handleEnter} aria-label="Ouvrir le Pokédex">
+              <div className="pb-shine" />
+            </button>
+          </div>
+
+          <div className={`panel-red panel-bottom ${phase !== 'idle' ? 'open' : ''}`} />
+        </div>
+
+        <p className="tap-label">Appuyer pour ouvrir</p>
+      </div>
     </div>
   );
 }

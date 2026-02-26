@@ -64,8 +64,8 @@ export const createTrainer = async (trainerData: Omit<Trainer, '_id'>): Promise<
   return response.data;
 };
 
-export const getTrainerById = async (): Promise<Trainer> => {
-  const response = await api.get('/trainers');
+export const getTrainerById = async (trainerId: string): Promise<Trainer> => {
+  const response = await api.get(`/trainers/${trainerId}`);
   return response.data;
 };
 

@@ -1,52 +1,50 @@
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import { login, register, checkToken } from "@/services/api";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/services/api';
 
-export const useAuth = () => {
-  const router = useRouter();
+type User = {
+  id: string;
+  email: string;
+  username: string;
+};
+
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
+
+  // Charger user au refresh
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const loginMutation = useMutation({
-    mutationFn: login,
-    onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-      router.push("/");
+    mutationFn: async (data: { email: string; password: string }) => {
+      const res = await api.post('/auth/login', data);
+      return res.data;
     },
-  });
-
-  const registerMutation = useMutation({
-    mutationFn: register,
-    onSuccess: () => {
-      router.push("/login");
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
     },
   });
 
   const logout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
-  };
-
-  const verifyToken = async () => {
-    try {
-      await checkToken();
-      return true;
-    } catch {
-      logout();
-      return false;
-    }
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
   };
 
   return {
+    user,
+    isAuthenticated: !!user,
     login: loginMutation.mutate,
     loginLoading: loginMutation.isPending,
     loginError: loginMutation.error,
-
-    register: registerMutation.mutate,
-    registerLoading: registerMutation.isPending,
-    registerError: registerMutation.error,
-
     logout,
-    verifyToken,
   };
-};
+}

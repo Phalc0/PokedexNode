@@ -7,3 +7,7 @@
     - /pokemon/[id] : detail page of a pokemon
     - /login
     - /register
+
+les hooks/ 
+permettent de centraliser tout les endroit ou je fais useState, useEffect ...
+et donc dans le code de la page avoir pa exemple juste : usePokemonAll

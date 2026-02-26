@@ -17,20 +17,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Token protected request
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 // Pokemon
 export const getAllPkmn = async (): Promise<Pkmn[]> => {
   const response = await api.get('/pkmn');
@@ -104,7 +90,7 @@ export const register = async (userData: { username: string; email: string; pass
   return response.data;
 };
 
-export const login = async (credentials: { email: string; password: string }): Promise<{ token: string }> => {
+export const login = async (credentials: { email: string; password: string }) => {
   const response = await api.post('/users/login', credentials);
   return response.data;
 };

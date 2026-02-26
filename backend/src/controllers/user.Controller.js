@@ -33,6 +33,15 @@ exports.login = async (req, res) => {
         // 3 - Generate JWT token (payload: userId, private key: TOKEN_SECRET, option)
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
 
+        // Envoyer le cookie httpOnly
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 1000, // 1 heure
+        });
+
+
         res.status(200).json({ token: token });
     }
     catch (err) {

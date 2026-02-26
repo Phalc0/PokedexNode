@@ -1,16 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAllPokemon, useSearchPokemon } from '@/hooks/usePokemon';
 
 export default function PokedexPage() {
   const [search, setSearch] = useState('');
   const { data: allPkmn, isLoading: loadingAll } = useAllPokemon();
-  const { data: searchResult, isLoading: loadingSearch } = useSearchPokemon(search);
+  const { data: searchResult, isLoading} = useSearchPokemon(search);
 
-  const pokemons = search.length > 0 ? searchResult : allPkmn;
+  // Log des données brutes
+  console.log('Recherche actuelle :', search);
+  console.log('All Pokémon:', allPkmn);
+  console.log('Résultats de recherche:', searchResult);
+  console.log('Loading All:', loadingAll, 'Loading Search:');
 
-  if (loadingAll || loadingSearch) return <Loader />;
+  const allData = allPkmn as { count: number; data: any[] } | undefined;
+  const pokemons = search.length > 3 ? searchResult : allData?.data;
+
+  // Log des Pokémon affichés
+  console.log('Pokémon affichés:', pokemons);
+
+  if (loadingAll) {
+    console.log('Chargement en cours...');
+    return <Loader />;
+  }
 
   return (
     <div className="p-4">
@@ -20,7 +33,10 @@ export default function PokedexPage() {
         <input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            console.log('Nouvelle valeur recherche :', e.target.value);
+          }}
           placeholder="Rechercher un Pokémon..."
           className="border rounded px-4 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
@@ -44,16 +60,20 @@ export default function PokedexPage() {
 // -------------------------
 
 function CardPokemon({ pokemon }: { pokemon: any }) {
+  console.log('Rendu CardPokemon:', pokemon);
   return (
     <div className="border rounded shadow hover:shadow-lg p-4 text-center transition">
-      <img src={pokemon.image} alt={pokemon.name} className="w-32 h-32 mx-auto mb-2"/>
+      <img src={pokemon.imgUrl} alt={pokemon.name} className="w-32 h-32 mx-auto mb-2" />
       <h2 className="font-bold text-xl">{pokemon.name}</h2>
-      <p className="text-sm text-gray-600">Type: {pokemon.type.join(', ')}</p>
+      <p className="text-sm text-gray-600">
+        Type: {pokemon.types?.join(', ') || 'Inconnu'}
+      </p>
     </div>
   );
 }
 
 function Loader() {
+  console.log('Affichage Loader');
   return (
     <div className="flex justify-center items-center h-64">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>

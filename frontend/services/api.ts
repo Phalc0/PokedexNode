@@ -18,7 +18,7 @@ const api = axios.create({
 });
 
 // Pokemon
-export const getAllPkmn = async (): Promise<Pkmn[]> => {
+export const getAllPkmn = async (): Promise<{ count: number; data: Pkmn[] }> => {
   const response = await api.get('/pkmn');
   return response.data;
 };

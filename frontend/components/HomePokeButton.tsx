@@ -7,8 +7,8 @@ interface PokeballButtonProps {
 
 export default function PokeballButton({ onClick }: PokeballButtonProps) {
     return (
-        <button className="Homedex-btn" onClick={onClick} aria-label="Ouvrir le Pokédex">
-            <div className="Homedex-btn__shine" />
+        <button className="homedex-btn" onClick={onClick} aria-label="Ouvrir le Pokédex">
+            <div className="homedex-btn__shine" />
         </button>
     )
 }

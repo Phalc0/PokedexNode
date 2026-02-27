@@ -31,16 +31,16 @@
    ========================================================================== */
 
 
-.Homedex-wrap {
+.homedex-wrap {
     transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
 }
 
-.Homedex-wrap.zooming {
+.homedex-wrap.zooming {
     transform: scale(8);
     opacity: 0;
 }
 
-.Homedex-body {
+.homedex-body {
     width: 240px;
     position: relative;
 }
@@ -56,7 +56,7 @@
 
 
 
-.Homedex-panel {
+.homedex-panel {
     background: var(--dex-red-grad);
     position: relative;
     overflow: hidden;
@@ -65,7 +65,7 @@
     transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.Homedex-panel::after {
+.homedex-panel::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -78,13 +78,13 @@
 
 
 /* Top Panel Specifics */
-.Homedex-panel--top {
+.homedex-panel--top {
     border-radius: 26px 26px 0 0;
     transform-origin: bottom center;
     box-shadow: inset 0 2px 4px rgba(255, 160, 160, 0.12);
 }
 
-.Homedex-panel--top::before {
+.homedex-panel--top::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -99,13 +99,13 @@
 
 
 /* Bottom Panel Specifics */
-.Homedex-panel--bottom {
+.homedex-panel--bottom {
     border-radius: 0 0 26px 26px;
     transform-origin: top center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
-.Homedex-panel--bottom::before {
+.homedex-panel--bottom::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -120,11 +120,11 @@
 
 
 /* States */
-.Homedex-panel--top.open {
+.homedex-panel--top.open {
     transform: translateY(-102%);
 }
 
-.Homedex-panel--bottom.open {
+.homedex-panel--bottom.open {
     transform: translateY(102%);
 }
 
@@ -138,7 +138,7 @@
    ========================================================================== */
 
 
-.Homedex-belt {
+.homedex-belt {
     height: 88px;
     position: relative;
     z-index: 3;
@@ -162,8 +162,8 @@
 
 
 /* Belt sides gradients */
-.Homedex-belt::before,
-.Homedex-belt::after {
+.homedex-belt::before,
+.homedex-belt::after {
     content: '';
     position: absolute;
     top: 0;
@@ -172,12 +172,12 @@
     pointer-events: none;
 }
 
-.Homedex-belt::before {
+.homedex-belt::before {
     left: 0;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
 }
 
-.Homedex-belt::after {
+.homedex-belt::after {
     right: 0;
     background: linear-gradient(270deg, rgba(255, 255, 255, 0.2), transparent);
 }
@@ -187,7 +187,7 @@
 /* Main Button */
 
 
-.Homedex-btn {
+.homedex-btn {
     position: relative;
     z-index: 4;
     width: 68px;
@@ -204,7 +204,7 @@
     transition: transform 0.15s, box-shadow 0.15s;
 }
 
-.Homedex-btn:hover {
+.homedex-btn:hover {
     transform: scale(1.08);
     box-shadow:
         0 0 0 3px rgba(157, 228, 244, 0.4),
@@ -213,13 +213,13 @@
         inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
 
-.Homedex-btn:active {
+.homedex-btn:active {
     transform: scale(0.95);
 }
 
 
 
-.Homedex-btn__shine {
+.homedex-btn__shine {
     position: absolute;
     top: 10px;
     left: 12px;
@@ -240,7 +240,7 @@
    4. Hidden Screen
    ========================================================================== */
 
-.Homedex-screen {
+.homedex-screen {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -254,39 +254,39 @@
     transition: opacity 0.3s ease 0.5s;
 }
 
-.Homedex-screen.is-visible {
+.homedex-screen.is-visible {
     opacity: 1;
 }
 
-.Homedex-screen__lines {
+.homedex-screen__lines {
     display: flex;
     flex-direction: column;
     gap: 6px;
     width: 65%;
 }
 
-.Homedex-screen__line {
+.homedex-screen__line {
     height: 3px;
     background: var(--ui-blue-faint);
     border-radius: 2px;
 }
 
-.Homedex-screen__line--short {
+.homedex-screen__line--short {
     width: 60%;
     opacity: 0.5;
 }
 
-.Homedex-screen__line--med {
+.homedex-screen__line--med {
     width: 75%;
     opacity: 0.6;
 }
 
-.Homedex-screen__line--long {
+.homedex-screen__line--long {
     width: 80%;
     opacity: 0.7;
 }
 
-.Homedex-screen__label {
+.homedex-screen__label {
     margin-top: 14px;
     font-family: 'Courier New', monospace;
     font-size: 9px;

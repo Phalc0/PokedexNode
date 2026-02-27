@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation'; // Importe les hooks de navigation
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { AuthDexFormLayout, AuthDexInput, AuthDexButton } from '@/components/AuthDexForm';
+import { AuthDexForm, AuthDexInput, AuthDexButton } from '@/components/AuthDexForm';
 
 export default function AuthPage() {
   const params = useParams();
@@ -31,7 +31,7 @@ export default function AuthPage() {
   };
 
   return (
-    <AuthDexFormLayout 
+    <AuthDexForm
       title={isLogin ? "Connexion" : "Inscription"} 
       subtitle={isLogin ? "Identifie-toi, Dresseur" : "Deviens Dresseur, Pokémon t'attend"} 
       error={currentError}
@@ -81,6 +81,6 @@ export default function AuthPage() {
           </Link>
         </div>
       </form>
-    </AuthDexFormLayout>
+    </AuthDexForm>
   );
 }

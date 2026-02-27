@@ -5,7 +5,7 @@ import '@/styles/AuthPokedex.css';
 
 
 /* ── Composant layout partagé ── */
-export function AuthDexFormLayout({ title, subtitle, error, children }: {
+export function AuthDexForm({ title, subtitle, error, children }: {
   title: string;
   subtitle: string;
   error?: string;
@@ -13,16 +13,16 @@ export function AuthDexFormLayout({ title, subtitle, error, children }: {
 }) {
   return (
     <>
-      <div className="dex-auth-layout">
+      <div className="auth-dex-layout">
         {/* Panneau gauche */}
-        <div className="dex-side dex-side-left"><div className="half-circle" /></div>
+        <div className="authdex-side authdex-side-left"><div className="half-circle" /></div>
 
         {/* Centre */}
-        <div className="dex-col">
-          <div className="dex-band" />
-          <div className="dex-bar dex-bar-top" />
+        <div className="authdex-col">
+          <div className="authdex-band" />
+          <div className="authdex-bar authdex-bar-top" />
 
-          <div className="dex-screen">
+          <div className="authdex-screen">
             <div className="form-card">
               <div className="form-pokeball" />
               <div className="form-title">{title}</div>
@@ -32,33 +32,31 @@ export function AuthDexFormLayout({ title, subtitle, error, children }: {
             </div>
           </div>
 
-          <div className="dex-bar dex-bar-bottom" />
-          <div className="dex-band" />
+          <div className="authdex-bar authdex-bar-bottom" />
+          <div className="authdex-band" />
         </div>
 
         {/* Panneau droit */}
-        <div className="dex-side dex-side-right"><div className="half-circle" /></div>
+        <div className="authdex-side authdex-side-right"><div className="half-circle" /></div>
       </div>
     </>
   );
 }
 
 /* ── Input stylisé ── */
-const ICONS: Record<string, string> = { email: '✉', password: '🔒', text: '👤' };
 
 export function AuthDexInput({ type, placeholder, value, onChange }: {
   type: string; placeholder: string; value: string; onChange: (v: string) => void;
 }) {
   return (
-    <div className="dex-input-wrap">
-      <span className="dex-input-icon">{ICONS[type] ?? '📝'}</span>
+    <div className="authdex-input-wrap">
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
         required
-        className="dex-input"
+        className="authdex-input"
       />
     </div>
   );
@@ -67,7 +65,7 @@ export function AuthDexInput({ type, placeholder, value, onChange }: {
 /* ── Bouton stylisé ── */
 export function AuthDexButton({ children, loading }: { children: ReactNode; loading?: boolean }) {
   return (
-    <button type="submit" disabled={loading} className="dex-btn">
+    <button type="submit" disabled={loading} className="authdex-btn-submit">
       {loading ? '...' : children}
     </button>
   );

@@ -1,22 +1,24 @@
 :root {
-    /*== Main Color (Red) ==*/
+    /* Colors - Red Theme */
     --dex-red-main: #c30d23;
     --dex-red-dark: #a00a1e;
     --dex-red-light: #d03e4f;
-    --dex-red-grad: linear-gradient(145deg, #d03e4f 0%, #c30d23 60%, #a00a1e 100%);
+    --dex-red-grad: linear-gradient(145deg, var(--dex-red-light) 0%, var(--dex-red-main) 60%, var(--dex-red-dark) 100%);
 
-    /*== Interface (Bleu) ==*/
+    /* Colors - UI Blue */
     --ui-blue: rgba(157, 228, 244, 1);
     --ui-blue-glow: rgba(157, 228, 244, 0.5);
     --ui-blue-faint: rgba(157, 228, 244, 0.2);
+    --ui-blue-line: rgba(200, 245, 255, 0.55);
 
-    /*== Animations ==*/
+    /* Animation Settings */
     --transition-speed: 0.75s;
     --bezier-standard: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /*== Panel Rings ==*/
+    /* Textures & Patterns */
     --ring-large: transparent 50%, rgba(0, 0, 0, 0.38) 51%, rgba(0, 0, 0, 0.38) 65%, transparent 66%;
     --ring-small: transparent 50%, rgba(0, 0, 0, 0.28) 51%, rgba(0, 0, 0, 0.28) 64%, transparent 65%;
+    --glass-glare: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, transparent 100%);
 }
 
 
@@ -24,19 +26,21 @@
 
 
 
-/**************** Base Layout ****************/
+/* ==========================================================================
+   1. Global Wrapper & Layout
+   ========================================================================== */
 
 
-.dex-wrap {
+.Homedex-wrap {
     transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
 }
 
-.dex-wrap.zooming {
+.Homedex-wrap.zooming {
     transform: scale(8);
     opacity: 0;
 }
 
-.dex-body {
+.Homedex-body {
     width: 240px;
     position: relative;
 }
@@ -46,9 +50,13 @@
 
 
 
-/**************** BLOC : Red Panel ****************/
+/* ==========================================================================
+   2. Main Panels (Top & Bottom)
+   ========================================================================== */
 
-.dex-panel {
+
+
+.Homedex-panel {
     background: var(--dex-red-grad);
     position: relative;
     overflow: hidden;
@@ -57,78 +65,80 @@
     transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.Homedex-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    height: 70%;
+    background: var(--glass-glare);
+    pointer-events: none;
+    z-index: 1;
+}
 
-.dex-panel--top {
+
+
+/* Top Panel Specifics */
+.Homedex-panel--top {
     border-radius: 26px 26px 0 0;
     transform-origin: bottom center;
     box-shadow: inset 0 2px 4px rgba(255, 160, 160, 0.12);
 }
 
-.dex-panel--bottom {
+.Homedex-panel--top::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle 130px at -10px -10px, var(--ring-large)),
+        radial-gradient(circle 70px at -10px -10px, var(--ring-small)),
+        radial-gradient(circle 130px at calc(100% + 10px) -10px, var(--ring-large)),
+        radial-gradient(circle 70px at calc(100% + 10px) -10px, var(--ring-small));
+}
+
+
+
+
+/* Bottom Panel Specifics */
+.Homedex-panel--bottom {
     border-radius: 0 0 26px 26px;
     transform-origin: top center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
+.Homedex-panel--bottom::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle 130px at -10px calc(100% + 10px), var(--ring-large)),
+        radial-gradient(circle 70px at -10px calc(100% + 10px), var(--ring-small)),
+        radial-gradient(circle 130px at calc(100% + 10px) calc(100% + 10px), var(--ring-large)),
+        radial-gradient(circle 70px at calc(100% + 10px) calc(100% + 10px), var(--ring-small));
+}
 
-/*==== State ====*/
 
 
-.dex-panel--top.open {
+
+/* States */
+.Homedex-panel--top.open {
     transform: translateY(-102%);
 }
 
-.dex-panel--bottom.open {
+.Homedex-panel--bottom.open {
     transform: translateY(102%);
 }
 
 
 
-.dex-panel::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        /*= Top Left =*/
-        radial-gradient(circle 72px at -10px -10px, var(--ring-large)),
-        /*= Top center =*/
-        /*= Bottom center =*/
-        /*= Bottom =*/
-        
-        /* coin haut gauche - petit anneau intérieur */
-        radial-gradient(circle 46px at -10px -10px, var(--ring-small)),
 
-        /* coin haut droit - grand anneau */
-        radial-gradient(circle 72px at calc(100% + 10px) -10px, var(--ring-large)),
-        /* coin haut droit - petit anneau */
-        radial-gradient(circle 46px at calc(100% + 10px) -10px, var(--ring-small)),
 
-        /* coin bas gauche - grand anneau */
-        radial-gradient(circle 72px at -10px calc(100% + 10px), var(--ring-large)),
-        /* coin bas gauche - petit anneau */
-        radial-gradient(circle 46px at -10px calc(100% + 10px), var(--ring-small)),
 
-        /* coin bas droit - grand anneau */
-        radial-gradient(circle 72px at calc(100% + 10px) calc(100% + 10px), var(--ring-large)),
-        /* coin bas droit - petit anneau */
-        radial-gradient(circle 46px at calc(100% + 10px) calc(100% + 10px), var(--ring-small));
-    pointer-events: none;
-    z-index: 1;
-}
+/* ==========================================================================
+   3. Central Belt & Button
+   ========================================================================== */
 
-.panel-red::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 45%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 1;
-}
 
-.center-band {
+.Homedex-belt {
     height: 88px;
     position: relative;
     z-index: 3;
@@ -149,8 +159,11 @@
         0 -3px 10px rgba(0, 0, 0, 0.3);
 }
 
-.center-band::before,
-.center-band::after {
+
+
+/* Belt sides gradients */
+.Homedex-belt::before,
+.Homedex-belt::after {
     content: '';
     position: absolute;
     top: 0;
@@ -159,37 +172,39 @@
     pointer-events: none;
 }
 
-.center-band::before {
+.Homedex-belt::before {
     left: 0;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
 }
 
-.center-band::after {
+.Homedex-belt::after {
     right: 0;
     background: linear-gradient(270deg, rgba(255, 255, 255, 0.2), transparent);
 }
 
-.pokeball-btn {
+
+
+/* Main Button */
+
+
+.Homedex-btn {
+    position: relative;
+    z-index: 4;
     width: 68px;
     height: 68px;
     border-radius: 50%;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    outline: none;
-    position: relative;
-    background: radial-gradient(circle at 32% 28%, #e8faff, #9de4f4 45%, #5cc8e0);
     border: 4px solid rgba(255, 255, 255, 0.4);
+    background: radial-gradient(circle at 32% 28%, #e8faff, #9de4f4 45%, #5cc8e0);
     box-shadow:
-        0 0 0 3px rgba(157, 228, 244, 0.3),
-        0 0 22px rgba(157, 228, 244, 1),
-        0 0 50px rgba(157, 228, 244, 0.5),
+        0 0 0 3px var(--ui-blue-faint),
+        0 0 22px var(--ui-blue),
+        0 0 50px var(--ui-blue-glow),
         inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
-    z-index: 4;
 }
 
-.pokeball-btn:hover {
+.Homedex-btn:hover {
     transform: scale(1.08);
     box-shadow:
         0 0 0 3px rgba(157, 228, 244, 0.4),
@@ -198,11 +213,13 @@
         inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
 
-.pokeball-btn:active {
+.Homedex-btn:active {
     transform: scale(0.95);
 }
 
-.pb-shine {
+
+
+.Homedex-btn__shine {
     position: absolute;
     top: 10px;
     left: 12px;
@@ -214,64 +231,80 @@
     pointer-events: none;
 }
 
-.screen-behind {
+
+
+
+
+
+/* ==========================================================================
+   4. Hidden Screen
+   ========================================================================== */
+
+.Homedex-screen {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 26px;
-    background: linear-gradient(160deg, #0d2028, #091520);
+    inset: 0;
     z-index: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    border-radius: 26px;
+    background: linear-gradient(160deg, #0d2028, #091520);
     opacity: 0;
     transition: opacity 0.3s ease 0.5s;
 }
 
-.screen-behind.visible {
+.Homedex-screen.is-visible {
     opacity: 1;
 }
 
-.screen-lines {
+.Homedex-screen__lines {
     display: flex;
     flex-direction: column;
     gap: 6px;
     width: 65%;
 }
 
-.screen-line {
+.Homedex-screen__line {
     height: 3px;
-    background: rgba(157, 228, 244, 0.2);
+    background: var(--ui-blue-faint);
     border-radius: 2px;
 }
 
-.screen-line:nth-child(2) {
-    width: 80%;
-    opacity: .7;
-}
-
-.screen-line:nth-child(3) {
+.Homedex-screen__line--short {
     width: 60%;
-    opacity: .5;
+    opacity: 0.5;
 }
 
-.screen-line:nth-child(4) {
+.Homedex-screen__line--med {
     width: 75%;
-    opacity: .6;
+    opacity: 0.6;
 }
 
-.tap-label {
+.Homedex-screen__line--long {
+    width: 80%;
+    opacity: 0.7;
+}
+
+.Homedex-screen__label {
+    margin-top: 14px;
     font-family: 'Courier New', monospace;
     font-size: 9px;
     letter-spacing: 0.3em;
     color: rgba(157, 228, 244, 0.45);
     text-transform: uppercase;
-    animation: pulse 2s ease-in-out infinite;
     text-align: center;
-    margin-top: 14px;
+    animation: pulse 2s ease-in-out infinite;
 }
+
+
+
+
+
+/* ==========================================================================
+   5. Animations
+   ========================================================================== */
+
 
 @keyframes pulse {
 

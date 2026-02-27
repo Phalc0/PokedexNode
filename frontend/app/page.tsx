@@ -22,25 +22,25 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: 'radial-gradient(ellipse at center, #3a3636 0%, #1a1010 100%)' }}>
 
-      <div className={`dex-wrap ${phase === 'zooming' ? 'zooming' : ''}`}>
-        <div className="dex-shadow dex-body">
-          <div className={`screen-behind ${phase !== 'idle' ? 'visible' : ''}`}>
-            <div className="screen-lines">
-              <div className="screen-line" /><div className="screen-line" />
-              <div className="screen-line" /><div className="screen-line" />
+      <div className={`Homedex-wrap ${phase === 'zooming' ? 'zooming' : ''}`}>
+        <div className="Homedex-shadow Homedex-body">
+          <div className={`Homedex-screen ${phase !== 'idle' ? 'visible' : ''}`}>
+            <div className="Homedex-screen__lines">
+              <div className="Homedex-screen__line" /><div className="Homedex-screen__line" />
+              <div className="Homedex-screen__line" /><div className="Homedex-screen__line" />
             </div>
           </div>
 
-          <div className={`dex-panel dex-panel--top ${phase !== 'idle' ? 'open' : ''}`} />
+          <div className={`Homedex-panel Homedex-panel--top ${phase !== 'idle' ? 'open' : ''}`} />
 
-          <div className="center-band">
+          <div className="Homedex-belt">
             <PokeballButton onClick={handleEnter} />
           </div>
 
-          <div className={`dex-panel dex-panel--bottom ${phase !== 'idle' ? 'open' : ''}`} />
+          <div className={`Homedex-panel Homedex-panel--bottom ${phase !== 'idle' ? 'open' : ''}`} />
         </div>
 
-        <p className="tap-label">Appuyer pour ouvrir</p>
+        <p className="Homedex-screen__label">Appuyer pour ouvrir</p>
       </div>
     </div>
   );

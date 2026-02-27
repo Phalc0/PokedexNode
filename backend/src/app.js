@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
 const app = express();
 const mongoose = require('mongoose');
 
@@ -23,6 +26,7 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 

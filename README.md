@@ -77,6 +77,17 @@ npm run dev
 
 ---
 
+## 📖 Documentation de l'API — Swagger
+
+Toutes les routes disponibles sont documentées et consultables via **Swagger UI** une fois le backend démarré :
+
+```
+http://localhost:3000/api/docs
+```
+
+---
+
+
 ## ⚠️ Important — Ports obligatoires
 
 La communication entre le frontend et le backend est configurée pour fonctionner **uniquement** sur ces ports :

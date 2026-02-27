@@ -5,7 +5,7 @@ import '@/styles/AuthPokedex.css';
 
 
 /* ── Composant layout partagé ── */
-export function DexFormLayout({ title, subtitle, error, children }: {
+export function AuthDexFormLayout({ title, subtitle, error, children }: {
   title: string;
   subtitle: string;
   error?: string;
@@ -46,7 +46,7 @@ export function DexFormLayout({ title, subtitle, error, children }: {
 /* ── Input stylisé ── */
 const ICONS: Record<string, string> = { email: '✉', password: '🔒', text: '👤' };
 
-export function DexInput({ type, placeholder, value, onChange }: {
+export function AuthDexInput({ type, placeholder, value, onChange }: {
   type: string; placeholder: string; value: string; onChange: (v: string) => void;
 }) {
   return (
@@ -65,7 +65,7 @@ export function DexInput({ type, placeholder, value, onChange }: {
 }
 
 /* ── Bouton stylisé ── */
-export function DexButton({ children, loading }: { children: ReactNode; loading?: boolean }) {
+export function AuthDexButton({ children, loading }: { children: ReactNode; loading?: boolean }) {
   return (
     <button type="submit" disabled={loading} className="dex-btn">
       {loading ? '...' : children}

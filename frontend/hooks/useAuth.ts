@@ -24,10 +24,7 @@ export function useAuth() {
   }, []);
 
   const loginMutation = useMutation({
-    mutationFn: async (data: { email: string; password: string }) => {
-      const res = await api.post('/auth/login', data);
-      return res.data;
-    },
+    mutationFn: login,
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));

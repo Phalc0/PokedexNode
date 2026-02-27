@@ -69,6 +69,11 @@ export const getTrainerById = async (trainerId: string): Promise<Trainer> => {
   return response.data;
 };
 
+export const getTrainerByUsername = async (username: string): Promise<Trainer> => {
+  const response = await api.get(`/trainers/username/${username}`);
+  return response.data;
+};
+
 export const updateTrainer = async (trainerData: Partial<Trainer>): Promise<Trainer> => {
   const response = await api.put('/trainers', trainerData);
   return response.data;

@@ -42,7 +42,14 @@ exports.login = async (req, res) => {
         });
 
 
-        res.status(200).json({ token: token });
+        res.status(200).json({
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                username: user.username
+            }
+        });
     }
     catch (err) {
         console.error("Erreur connexion utilisateur :", err);

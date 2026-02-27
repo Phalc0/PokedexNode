@@ -8,6 +8,7 @@ router.post('/', authMiddleware, trainerController.createTrainer);
 router.get('/', authMiddleware, trainerController.getTrainerById);
 router.put('/', authMiddleware, trainerController.updateTrainer);
 router.delete('/', authMiddleware, trainerController.deleteTrainer);
+router.get('/username/:username', trainerController.getTrainerByUsername);
 
 router.post('/markPkmn', authMiddleware, trainerController.markPkmn);
 

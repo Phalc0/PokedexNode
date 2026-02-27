@@ -1,57 +1,48 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/services/api'; 
+import { login } from '@/services/api';
+import Link from 'next/link';
+import { DexFormLayout, DexInput, DexButton } from '@/components/DexFormLayout';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
+    setLoading(true);
     try {
-      // Appel à l'API login
       const data = await login({ email, password });
-      console.log('Login réussi :', data);
-
-      // Redirection vers Pokedex ou home
-      router.push('/'); // change si tu as une page spécifique
+      localStorage.setItem('user', JSON.stringify(data.user));
+      router.push('/pokedex');
     } catch (err: any) {
-      console.error(err);
       setError(err.response?.data?.message || 'Erreur serveur');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-3xl font-bold mb-6">Connexion</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Se connecter
-        </button>
-        {error && <p className="text-red-500">{error}</p>}
+    <DexFormLayout title="Connexion" subtitle="Identifie-toi, Dresseur" error={error}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <DexInput type="email"    placeholder="Email"          value={email}    onChange={setEmail} />
+        <DexInput type="password" placeholder="Mot de passe"   value={password} onChange={setPassword} />
+        <DexButton loading={loading}>Se connecter</DexButton>
+        <div style={{ textAlign: 'center', marginTop: 4 }}>
+          <Link href="/auth/register" style={{
+            fontSize: 11, color: 'rgba(5,50,70,0.6)', fontFamily: "'Exo 2', sans-serif",
+            fontWeight: 600, letterSpacing: '0.05em', textDecoration: 'none',
+            borderBottom: '1px solid rgba(5,50,70,0.2)', paddingBottom: 1
+          }}>
+            Pas encore de compte ? S'inscrire →
+          </Link>
+        </div>
       </form>
-    </div>
+    </DexFormLayout>
   );
 }

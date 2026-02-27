@@ -1,0 +1,337 @@
+'use client';
+import { ReactNode } from 'react';
+
+/* ── Composant layout partagé ── */
+export function DexFormLayout({ title, subtitle, error, children }: {
+  title: string;
+  subtitle: string;
+  error?: string;
+  children: ReactNode;
+}) {
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&display=swap');
+        * { box-sizing: border-box; }
+
+        .dex-auth-layout {
+          min-height: 100vh;
+          display: flex;
+          align-items: stretch;
+          background: #1a0a0a;
+          overflow: hidden;
+          font-family: 'Exo 2', sans-serif;
+        }
+
+        /* ── Panneaux rouges ── */
+        .dex-side {
+          width: 80px;
+          flex-shrink: 0;
+          background: linear-gradient(160deg, #d03e4f 0%, #c30d23 55%, #8a0818 100%);
+          position: relative;
+          overflow: hidden;
+        }
+        .dex-side-left  { border-radius: 28px 0 0 28px; box-shadow: inset -3px 0 8px rgba(0,0,0,0.35), 4px 0 20px rgba(0,0,0,0.4); }
+        .dex-side-right { border-radius: 0 28px 28px 0; box-shadow: inset  3px 0 8px rgba(0,0,0,0.35), -4px 0 20px rgba(0,0,0,0.4); }
+
+        .dex-side::before {
+          content: '';
+          position: absolute;
+          inset: -10px;
+          background:
+            radial-gradient(circle 65px at -10px -10px,  transparent 50%, rgba(0,0,0,0.42) 51%, rgba(0,0,0,0.42) 64%, transparent 65%),
+            radial-gradient(circle 42px at -10px -10px,  transparent 50%, rgba(0,0,0,0.30) 51%, rgba(0,0,0,0.30) 63%, transparent 64%),
+            radial-gradient(circle 65px at calc(100% + 10px) -10px, transparent 50%, rgba(0,0,0,0.42) 51%, rgba(0,0,0,0.42) 64%, transparent 65%),
+            radial-gradient(circle 42px at calc(100% + 10px) -10px, transparent 50%, rgba(0,0,0,0.30) 51%, rgba(0,0,0,0.30) 63%, transparent 64%),
+            radial-gradient(circle 65px at -10px calc(100% + 10px), transparent 50%, rgba(0,0,0,0.42) 51%, rgba(0,0,0,0.42) 64%, transparent 65%),
+            radial-gradient(circle 42px at -10px calc(100% + 10px), transparent 50%, rgba(0,0,0,0.30) 51%, rgba(0,0,0,0.30) 63%, transparent 64%),
+            radial-gradient(circle 65px at calc(100% + 10px) calc(100% + 10px), transparent 50%, rgba(0,0,0,0.42) 51%, rgba(0,0,0,0.42) 64%, transparent 65%),
+            radial-gradient(circle 42px at calc(100% + 10px) calc(100% + 10px), transparent 50%, rgba(0,0,0,0.30) 51%, rgba(0,0,0,0.30) 63%, transparent 64%);
+          pointer-events: none;
+        }
+        .dex-side::after {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 38%;
+          background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 100%);
+          pointer-events: none;
+        }
+
+        .dex-side-left .half-circle {
+          position: absolute;
+          top: 50%; right: -3px;
+          transform: translateY(-50%);
+          width: 54px; height: 110px;
+          background: linear-gradient(90deg, #2a2624 0%, #1e1a18 100%);
+          border-radius: 110px 0 0 110px;
+          border: 3px solid #1a1614;
+          border-right: none;
+          z-index: 2;
+          box-shadow: inset -8px 0 18px rgba(0,0,0,0.7);
+        }
+        .dex-side-right .half-circle {
+          position: absolute;
+          top: 50%; left: -3px;
+          transform: translateY(-50%);
+          width: 54px; height: 110px;
+          background: linear-gradient(270deg, #2a2624 0%, #1e1a18 100%);
+          border-radius: 0 110px 110px 0;
+          border: 3px solid #1a1614;
+          border-left: none;
+          z-index: 2;
+          box-shadow: inset 8px 0 18px rgba(0,0,0,0.7);
+        }
+
+        /* ── Colonne centrale ── */
+        .dex-col {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        /* ── Bande cyan ── */
+        .dex-band {
+          height: 16px;
+          flex-shrink: 0;
+          background: linear-gradient(90deg,
+            rgba(157,228,244,0.15) 0%,
+            #9ce9f6 20%,
+            #c8f5ff 50%,
+            #9ce9f6 80%,
+            rgba(157,228,244,0.15) 100%
+          );
+          border-top: 1px solid rgba(255,255,255,0.5);
+          border-bottom: 1px solid rgba(200,245,255,0.4);
+          box-shadow: 0 0 20px rgba(157,228,244,0.4), 0 2px 8px rgba(0,0,0,0.3);
+          position: relative;
+          z-index: 5;
+        }
+
+        /* ── Barre noire arrondie ── */
+        .dex-bar {
+          height: 24px;
+          flex-shrink: 0;
+          background: #2f2b2a;
+          position: relative;
+          z-index: 4;
+        }
+        .dex-bar-top    { border-radius: 14px 14px 0 0; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .dex-bar-bottom { border-radius: 0 0 14px 14px; box-shadow: 0 -4px 12px rgba(0,0,0,0.5); }
+
+        /* ── Écran holographique ── */
+        .dex-screen {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          padding: 32px 24px;
+          background:
+            radial-gradient(ellipse 80% 60% at 50% 10%, rgba(255,255,255,0.55) 0%, rgba(157,228,244,0.6) 30%, transparent 70%),
+            radial-gradient(ellipse 100% 100% at 50% 50%, #9de4f4 0%, #62c8e0 35%, #2a9ab8 65%, #0d5f7a 100%);
+        }
+
+        .dex-screen::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: repeating-linear-gradient(
+            0deg, transparent 0px, transparent 3px,
+            rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px
+          );
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        /* ── Carte formulaire ── */
+        .form-card {
+          position: relative;
+          z-index: 1;
+          width: 100%;
+          max-width: 340px;
+          background: rgba(255,255,255,0.28);
+          border: 1px solid rgba(255,255,255,0.55);
+          border-radius: 20px;
+          padding: 28px 24px 24px;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 8px 32px rgba(0,80,100,0.2), 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Pokéball déco */
+        .form-pokeball {
+          width: 48px; height: 48px;
+          border-radius: 50%;
+          background: #c30d23;
+          border: 3px solid #1a0a0a;
+          position: relative;
+          margin: 0 auto 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 14px rgba(195,13,35,0.5);
+        }
+        .form-pokeball::before {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; right: 0; height: 50%;
+          background: white;
+        }
+        .form-pokeball::after {
+          content: '';
+          position: absolute;
+          top: 50%; left: 50%;
+          transform: translate(-50%, -50%);
+          width: 14px; height: 14px;
+          border-radius: 50%;
+          background: radial-gradient(circle at 35% 30%, #e8faff, #9de4f4);
+          border: 2px solid #1a0a0a;
+          z-index: 2;
+          box-shadow: 0 0 8px rgba(157,228,244,0.9);
+        }
+
+        .form-title {
+          font-size: 18px;
+          font-weight: 900;
+          letter-spacing: 0.2em;
+          color: #052838;
+          text-transform: uppercase;
+          text-align: center;
+          margin-bottom: 4px;
+          text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        }
+        .form-subtitle {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          color: rgba(5,50,70,0.55);
+          text-align: center;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+        }
+
+        .form-error {
+          background: rgba(195,13,35,0.15);
+          border: 1px solid rgba(195,13,35,0.35);
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 11px;
+          color: #7a0a15;
+          font-weight: 600;
+          text-align: center;
+          margin-top: 10px;
+        }
+
+        /* ── Inputs ── */
+        .dex-input-wrap {
+          position: relative;
+        }
+        .dex-input-icon {
+          position: absolute;
+          left: 12px; top: 50%;
+          transform: translateY(-50%);
+          font-size: 12px;
+          opacity: 0.5;
+          pointer-events: none;
+        }
+        .dex-input {
+          width: 100%;
+          background: rgba(255,255,255,0.3);
+          border: 1px solid rgba(255,255,255,0.5);
+          border-radius: 12px;
+          padding: 10px 12px 10px 34px;
+          font-size: 13px;
+          color: #052838;
+          outline: none;
+          font-family: 'Exo 2', sans-serif;
+          font-weight: 600;
+          transition: all 0.2s;
+        }
+        .dex-input::placeholder { color: rgba(5,50,70,0.4); }
+        .dex-input:focus {
+          background: rgba(255,255,255,0.5);
+          border-color: rgba(255,255,255,0.8);
+          box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+        }
+
+        /* ── Bouton ── */
+        .dex-btn {
+          width: 100%;
+          padding: 12px;
+          background: #c30d23;
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          font-family: 'Exo 2', sans-serif;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 4px 14px rgba(195,13,35,0.45);
+          margin-top: 4px;
+        }
+        .dex-btn:hover { background: #e0102a; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(195,13,35,0.55); }
+        .dex-btn:active { transform: scale(0.97); }
+        .dex-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+      `}</style>
+
+      <div className="dex-auth-layout">
+        {/* Panneau gauche */}
+        <div className="dex-side dex-side-left"><div className="half-circle" /></div>
+
+        {/* Centre */}
+        <div className="dex-col">
+          <div className="dex-band" />
+          <div className="dex-bar dex-bar-top" />
+
+          <div className="dex-screen">
+            <div className="form-card">
+              <div className="form-pokeball" />
+              <div className="form-title">{title}</div>
+              <div className="form-subtitle">{subtitle}</div>
+              {children}
+              {error && <div className="form-error">⚠ {error}</div>}
+            </div>
+          </div>
+
+          <div className="dex-bar dex-bar-bottom" />
+          <div className="dex-band" />
+        </div>
+
+        {/* Panneau droit */}
+        <div className="dex-side dex-side-right"><div className="half-circle" /></div>
+      </div>
+    </>
+  );
+}
+
+/* ── Input stylisé ── */
+const ICONS: Record<string, string> = { email: '✉', password: '🔒', text: '👤' };
+
+export function DexInput({ type, placeholder, value, onChange }: {
+  type: string; placeholder: string; value: string; onChange: (v: string) => void;
+}) {
+  return (
+    <div className="dex-input-wrap">
+      <span className="dex-input-icon">{ICONS[type] ?? '📝'}</span>
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        required
+        className="dex-input"
+      />
+    </div>
+  );
+}
+
+/* ── Bouton stylisé ── */
+export function DexButton({ children, loading }: { children: ReactNode; loading?: boolean }) {
+  return (
+    <button type="submit" disabled={loading} className="dex-btn">
+      {loading ? '...' : children}
+    </button>
+  );
+}

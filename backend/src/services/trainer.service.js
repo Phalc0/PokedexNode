@@ -66,6 +66,13 @@ class TrainerService {
         return trainer;
     }
 
+    async getTrainerByUsername(username) {
+        const trainer = await trainerModel.findOne({ username });
+        if (!trainer) {
+            throw new Error('Trainer not found');
+        }
+        return trainer;
+    }
 
     async markPkmn(userId, pkmnId, isCaught) {
         // Validate pkmnId is a valid ObjectId
@@ -95,15 +102,21 @@ class TrainerService {
             trainer.pkmnSeen.push(pkmnId);
         }
 
-        // add to caught
+        // add or remove to caught
         if (isCaught) {
             if (!trainer.pkmnCaught.includes(pkmnId)) {
                 trainer.pkmnCaught.push(pkmnId);
             }
         }
-        
+        else {
+            trainer.pkmnCaught = trainer.pkmnCaught.filter(
+                (id) => id.toString() !== pkmnId.toString()
+            );
+        }
+
+
         await trainer.save();
-        
+
         return trainer;
     }
 }

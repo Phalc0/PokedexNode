@@ -5,6 +5,6 @@ export interface Trainer {
     imgUrl: string;
     trainerName: string;
     creationDate: string;
-    pkmnSeen: [];
-    pkmnCaught: [];
+    pkmnSeen: string[];
+    pkmnCaught: string[];
 }

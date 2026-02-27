@@ -13,7 +13,7 @@ export default function HomePage() {
     setPhase('opening');
     setTimeout(() => setPhase('zooming'), 800);
     setTimeout(() => {
-      router.push(isAuthenticated ? '/pokedex' : '/login');
+      router.push(isAuthenticated ? '/pokedex' : '/auth/login');
     }, 1600);
   };
 

@@ -49,6 +49,21 @@ exports.getTrainerById = async (req, res) => {
     }
 }
 
+// trainerByUsername
+
+exports.getTrainerByUsername = async (req, res) => {
+    try {
+        const { username } = req.params;
+        let trainer = await trainerService.getTrainerByUsername(username);
+        res.status(200).json(trainer);
+    }
+    catch (err) {
+        console.error('Error fetching Trainer by username:', err);
+        res.status(400).json({ message: err.message });
+    }
+}
+
+
 exports.markPkmn = async (req, res) => {
     try {
         const { pkmnId, isCaught } = req.body;

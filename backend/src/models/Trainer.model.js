@@ -9,7 +9,6 @@ const trainerSchema = new mongoose.Schema({
     },
     imgUrl:{
         type: String,
-        required: true
     },
     trainerName:{
         type: String,

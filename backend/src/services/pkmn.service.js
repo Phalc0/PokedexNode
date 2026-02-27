@@ -51,7 +51,7 @@ class PkmnService {
         return pokemon.save();
     }
 
-    async search({ page = 1, size = 10, typeOne, typeTwo, partialName }) {
+    async search({ page = 1, size = 50, typeOne, typeTwo, partialName }) {
         const query = {};
         if (typeOne) query.types = typeOne;
         if (typeTwo) query.types = { $all: [typeOne, typeTwo] };

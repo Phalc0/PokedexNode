@@ -89,13 +89,12 @@
     position: absolute;
     inset: 0;
     background:
-        /*= Top =*/
+        /*= Top Left =*/
+        radial-gradient(circle 72px at -10px -10px, var(--ring-large)),
         /*= Top center =*/
         /*= Bottom center =*/
         /*= Bottom =*/
         
-        /* coin haut gauche - grand anneau */
-        radial-gradient(circle 72px at -10px -10px, var(--ring-large)),
         /* coin haut gauche - petit anneau intérieur */
         radial-gradient(circle 46px at -10px -10px, var(--ring-small)),
 

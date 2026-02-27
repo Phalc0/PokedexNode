@@ -16,9 +16,9 @@ et donc dans le code de la page avoir pa exemple juste : usePokemonAll
 
 
 Pokemon :
-    - 1 silhouette noire si pas vu pas capturé
-    - 2 silhouette plus noir si vu
-    - 3 pokeball a cote si capturé (clique quelque chose )
+    - 1 silhouette noire si trainer  pas vu pas capturé
+    - 2 silhouette plus noir si trainer a  vu mais pas capturé
+    - 3 pokeball a cote si trainer a capturé (clique quelque chose )
 Bleu
 #9de4f4
 #9ce9f6

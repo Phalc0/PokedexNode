@@ -1,8 +1,9 @@
 'use client'
+
+
 interface PokeballButtonProps {
     onClick: () => void;
 }
-
 
 export default function PokeballButton({ onClick }: PokeballButtonProps) {
     return (

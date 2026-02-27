@@ -31,13 +31,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className={`panel-red panel-top ${phase !== 'idle' ? 'open' : ''}`} />
+          <div className={`dex-panel dex-panel--top ${phase !== 'idle' ? 'open' : ''}`} />
 
           <div className="center-band">
             <PokeballButton onClick={handleEnter} />
           </div>
 
-          <div className={`panel-red panel-bottom ${phase !== 'idle' ? 'open' : ''}`} />
+          <div className={`dex-panel dex-panel--bottom ${phase !== 'idle' ? 'open' : ''}`} />
         </div>
 
         <p className="tap-label">Appuyer pour ouvrir</p>

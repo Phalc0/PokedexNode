@@ -98,3 +98,6 @@ La communication entre le frontend et le backend est configurée pour fonctionne
 | Frontend | `3001` |
 
 > Si l'un des serveurs tourne sur un port différent, la connexion entre les deux ne fonctionnera **pas**. Assurez-vous qu'aucun autre service n'occupe ces ports avant de démarrer l'application.
+
+
+bin/mongod.exe --dbpath data
